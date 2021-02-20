@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Project| <%= project.title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="../public/stylesheets/addProject.css" type='text/css' rel='stylesheet'>
+</head>
+
+<body>
+    <div class="main">
+        <h1>Edit Project - <%= project.title %></h1>
+        <div class="card">
+            <form action='/editProject/:id' method='POST'>
+                <input type="text" name="project[title]" class="product_name" value='<%= project.title %>' placeholder="Project Title">
+                <input type="text" name="project[siteUrl]" class="price" value='<%= project.siteUrl %>' placeholder="Project Link">
+                <input type="text" name="project[codeUrl]" class="price" value='<%= project.codeUrl %>' placeholder="Code Link">
+                <!-- <input type="file" class="form-file-input" id="image" name="image"> -->
+                <textarea placeholder="Add description" class="description" value='<%= project.description %>' name="project[description]"
+                    rows="10"></textarea>
+                <input type="text" name="project[frontendtechnologies]" class="price"
+                    placeholder="Front-end Technologies Used" value='<%= project.frontendtechnologies %>'>
+                <input type="text" name="project[backendtechnologies]" class="price"
+                    placeholder="Back-end Technologies Used" value='<%= project.backendtechnologies %>'>
+                <input type="text" name="project[features]" class="price" value='<%= project.features %>' placeholder="Features">
+                <button type="submit" class="button">Update</button>
+            </form>
+            <a href="/" class="cancel">Cancel</a>
+        </div>
+    </div>
+</body>
+
+</html>

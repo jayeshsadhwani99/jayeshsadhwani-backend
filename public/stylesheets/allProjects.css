@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.card {
+  padding: 1rem;
+  margin: 1rem;
+  background-color: grey;
+  border-radius: 10px;
+}
+
+.project_image {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 5px;
+}
+
+.project_title {
+  font-size: 2rem;
+}
+
+.project_url a {
+  font-size: 1.5rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.button {
+  padding: 1rem;
+  border: 1px solid black;
+  outline: none;
+  flex-grow: 1;
+  color: white;
+  text-decoration: none;
+  background-color: black;
+}
+
+.button:hover {
+  color: black;
+  background-color: white;
+}

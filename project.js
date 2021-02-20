@@ -6,7 +6,8 @@ const projectSchema = mongoose.Schema({
     siteUrl: String,
     codeUrl: String,
     description: String,
-    technologies: String,
+    backendtechnologies: String,
+    frontendtechnologies: String,
     features: String,
 })
 
