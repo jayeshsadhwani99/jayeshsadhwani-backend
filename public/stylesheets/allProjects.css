@@ -1,6 +1,21 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Lato", "serif";
+}
+
+h1 {
+  font-size: 6vw;
+  text-align: center;
+  margin: 2rem;
+  color: #333;
+}
+
+h2 {
+  font-size: 3vw;
+  text-align: center;
+  margin: 2rem;
+  color: #333;
 }
 
 .cards {
@@ -20,10 +35,13 @@
   width: 10rem;
   height: 10rem;
   border-radius: 5px;
+  margin: 1rem;
 }
 
 .project_title {
   font-size: 2rem;
+  padding: 0.5rem 0;
+  color: white;
 }
 
 .project_url a {
@@ -43,6 +61,7 @@
   color: white;
   text-decoration: none;
   background-color: black;
+  cursor: pointer;
 }
 
 .button:hover {

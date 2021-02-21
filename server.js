@@ -2,27 +2,29 @@
 //     require('dotenv').config();
 // }
 
-import express from 'express'
-import mongoose from 'mongoose'
-import Projects from './project.js';
+import express from 'express';
+import mongoose from 'mongoose';
 import ejsMate from 'ejs-mate';
 import path from 'path';
-import multer from 'multer';
-import { storage } from './cloudinary/index.js';
+import Cors from 'cors';
 import Project from './project.js';
+import { isLoggedIn } from './middleware.js';
+import cookieParser from 'cookie-parser';
 
-const upload = multer({ storage });
+const __dirname = path.resolve();
 
 const app = express();
+app.use(Cors());
 const port = process.env.PORT || 3001;
 const connection_url= process.env.DB_URL || 'mongodb://localhost:27017/jayeshsadhwani';
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
-// app.set('views', path.join(__dirname, 'views'))
+app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({extended:true}));
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 
 mongoose.connect(connection_url, {
     useNewUrlParser: true,
@@ -37,71 +39,72 @@ db.once("open", () => {
 });
 
 app.get('/', (req, res) => {
-    res.status(200).send('Jayesh Sadhwani Admin');
+    res.render('Home');
 })
 
-app.get('/projects', (req, res) => {
+app.post('/', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    const userAuthCode = process.env.userAuthCode || 'userAuthCode';
+    const passwordVerification = process.env.password || 'password';
+    const usernameVerification = process.env.user || 'admin';
+    if((password === passwordVerification) && (username === usernameVerification)) {
+        res.cookie('userAuthCode', userAuthCode,  {expire: 1000 * 60 * 60 * 24 + Date.now()});
+        res.redirect('/projects');
+    } else {
+        res.redirect('/');
+    }
+})
+
+app.post('/logout', (req, res)=> {
+    res.clearCookie('userAuthCode')
+    res.redirect('/');
+})
+
+app.get('/getProjects', async (req, res) => {
+    await Project.find((err, data) => {
+        if(err) {
+            res.status(500).err
+        } else {
+            res.status(200).send(data);
+        }
+    });
+})
+
+app.get('/projects', isLoggedIn, async (req, res) => {
     const projects = await Project.find();
     res.render('allProjects', { projects });
 })
 
-app.get('/addProject', (req, res) => {
+app.get('/addProject', isLoggedIn, (req, res) => {
     res.status(200).render('addProject');
 })
 
-app.get('/editProject/:id', async (req, res) => {
+app.get('/editProject/:id', isLoggedIn, async (req, res) => {
     const id = req.params.id;
     const project = await Project.findById(id);
     res.render('editProject', {project})
 })
 
-app.post('/addProject', upload.single('image'), async (req, res) => {
+app.post('/addProject', isLoggedIn, async (req, res) => {
     const project = new Project(req.body.project);
-    console.log(req.files);
     // project.image = req.files.map(f => ({ url: f.path, filename: f.filename }));
     await project.save();
     console.log(project);
-    res.send('done');
+    res.redirect('/projects');
 })
 
-app.post('/editProject/:id', async (req, res) => {
+app.post('/editProject/:id', isLoggedIn, async (req, res) => {
     const id = req.params.id;
-    const project = await Project.findByIdAndUpdate(id);
-    project = req.body.project;
+    const project = await Project.findByIdAndUpdate(id, {...req.body.project});
     project.save();
-    res.redirect('/');
+    res.redirect('/projects');
 })
 
-app.post('/deleteProject/:id', async (req, res) => {
+app.post('/deleteProject/:id', isLoggedIn, async (req, res) => {
     const id = req.params.id;
     const project = await Project.findByIdAndDelete(id);
-    project.save();
-    res.redirect('/');
-})
-
-// app.post('/tinder/cards', (req, res) => {
-//     const dbCard = req.body;
-//     try {
-//         Projects.create(dbCard, (err, data)=>{
-//             if(err) {
-//                 res.status(500).err
-//             } else {
-//                 res.status(201).send(data)
-//             }
-//         })
-//     } catch(e) {
-//         res.send(e);
-//     }
-// })
-
-app.get('/tinder/cards', (req, res) => {
-    Projects.find((err, data)=>{
-        if(err) {
-            res.status(500).err
-        } else {
-            res.status(200).send(data)
-        }
-    })
+    res.redirect('/projects');
 })
 
 app.listen(port, (req,res)=> {

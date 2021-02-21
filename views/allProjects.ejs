@@ -2,31 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Projects</title>
-    <link href='../public/stylesheets/allProjects.css' rel='stylesheet'>
+    <link href='../stylesheets/allProjects.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <h1>All Projects</h1>
-    <div class='cards'>
-        <% projects.forEach(project=> { %>
-            <div class='card'>
-                <img src='#' class='project_image' alt='Project Image' />
-                <div class='project_title'>
-                    <%= project.title %>
+    <a class='button' href='/addProject'>Add Project</a>
+    <form action='/logout' method='POST'>
+        <button class='button'>Logout</button>
+    </form>
+    <% if(projects.length > 0) { %>
+        <div class='cards'>
+            <% projects.forEach(project=> { %>
+                <div class='card'>
+                    <img src='<%= project.imgUrl %>' class='project_image' alt='Project Image' />
+                    <div class='project_title'>
+                        <%= project.title %>
+                    </div>
+                    <div class='project_url'>
+                        <a href='<%= project.siteUrl %>'></a>
+                    </div>
+                    <div class='buttons'>
+                        <a href='/editProject/<%= project._id %>' class='button'>Edit</a>
+                        <form action='/deleteProject/<%= project._id %>' method='POST'>
+                            <button class='button'>Delete</button>
+                        </form>
+                    </div>
                 </div>
-                <div class='project_url'>
-                    <a href='<%= project.siteUrl %>'></a>
-                </div>
-                <div class='buttons'>
-                    <a href='/editProject/<%= project._id %>' class='button'>Edit</a>
-                    <form action='/deleteProject/<%= project._id %>' method='POST'>
-                        <div class='button'>Delete</div>
-                    </form>
-                </div>
-            </div>
-        <% }) %>
-    </div>
+                <% }) %>
+        </div>
+    <% } else { %>
+        <h2>No Projects addded</h2>
+    <% } %>
 </body>
 </html>
