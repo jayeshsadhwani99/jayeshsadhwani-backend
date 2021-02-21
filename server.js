@@ -39,7 +39,7 @@ db.once("open", () => {
 });
 
 app.get('/', (req, res) => {
-    res.render('Home');
+    res.render('home');
 })
 
 app.post('/', (req, res) => {
