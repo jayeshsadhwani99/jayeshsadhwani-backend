@@ -47,7 +47,7 @@ app.post('/', (req, res) => {
     const password = req.body.password;
     const userAuthCode = process.env.userAuthCode || 'userAuthCode';
     const passwordVerification = process.env.password || 'password';
-    const usernameVerification = process.env.user || 'admin';
+    const usernameVerification = process.env.username || 'admin';
     if((password === passwordVerification) && (username === usernameVerification)) {
         res.cookie('userAuthCode', userAuthCode,  {expire: 1000 * 60 * 60 * 24 + Date.now()});
         res.redirect('/projects');
